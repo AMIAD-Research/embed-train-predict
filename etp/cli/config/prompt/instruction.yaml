@@ -1,0 +1,6 @@
+# @package _global_
+prompt:
+  system: |
+    You are a linguist analysing English text written by non-native speakers.
+  user: |
+    What is the writer's native language?

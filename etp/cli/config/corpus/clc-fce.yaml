@@ -1,0 +1,25 @@
+# @package _global_
+# The worked example: the public CLC-FCE dataset, downloaded and formatted by
+# scripts/prepare_clc_fce_data.py.
+corpus_name: clc-fce
+label_key: language_l1
+text_key: text
+corpus_tables:
+  - _target_: etp.utils.load_corpus_table
+    directory: ${corpus_directory}/${corpus_name}
+    list_filename: list/${corpus_name}-test.csv
+    constants:
+      corpus_name: ${corpus_name}
+      split: test
+  - _target_: etp.utils.load_corpus_table
+    directory: ${corpus_directory}/${corpus_name}
+    list_filename: list/${corpus_name}-validation.csv
+    constants:
+      corpus_name: ${corpus_name}
+      split: validation
+  - _target_: etp.utils.load_corpus_table
+    directory: ${corpus_directory}/${corpus_name}
+    list_filename: list/${corpus_name}-train.csv
+    constants:
+      corpus_name: ${corpus_name}
+      split: train

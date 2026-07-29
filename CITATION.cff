@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "embed-train-predict"
+type: software
+license: MIT
+repository-code: "https://github.com/AMIAD-Research/embed-train-predict"
+authors:
+  - family-names: Auger
+    given-names: Roxane
+    affiliation: "AMIAD, Pôle Recherche"
+keywords:
+  - native language identification
+  - large language models
+  - text embeddings
+  - linear discriminant analysis
+
+preferred-citation:
+  type: conference-paper
+  title: "Using large language models to provide effective embeddings for native language identification"
+  year: 2026
+  collection-title: "Findings of the 2026 Conference on Empirical Methods in Natural Language Processing"
+  publisher:
+    name: "Association for Computational Linguistics"
+  authors:
+    - family-names: Auger
+      given-names: Roxane
+      affiliation: "AMIAD, Pôle Recherche"
+    - family-names: Boeffard
+      given-names: Olivier
+      affiliation: "AMIAD, Pôle Recherche"
+    - family-names: Bonastre
+      given-names: Jean-François
+      affiliation: "AMIAD, Pôle Recherche"
+

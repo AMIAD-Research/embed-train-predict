@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# IDE
+.vscode/
+
+# Pipeline outputs and data (default directories)
+/out/
+/data/
+
+# Local scripts and scratch work
+/local/

@@ -1,0 +1,79 @@
+defaults:
+  - _self_
+  - corpus: clc-fce
+  - prompt: none
+  - strategy: ddp
+
+corpus_directory: ${hydra:runtime.cwd}/data
+model_name_or_path: ???
+run_directory: ???
+
+seed: 1
+float32_matmul_precision: high
+
+dataset:
+  _target_: etp.embedder.dataset.TableDataset
+  table:
+    _target_: etp.utils.concat_corpora
+    corpus_list: ${corpus_tables}
+  columns: [id, "${label_key}", "${text_key}"]
+  limit: null
+
+datamodule:
+  _target_: etp.embedder.dataset.DataModule
+  test_dataset_cfg: ${dataset}
+  test_dataloader_cfg:
+    batch_size: 1
+    drop_last: false
+    num_workers: 8
+    pin_memory: true
+    persistent_workers: false
+  collate_fn_cfg:
+    function: etp.embedder.collate.text_collate
+    text_key: ${text_key}
+    processor: ${model.cfg.processor}
+    config: ${model.cfg.config}
+    prompt: ${prompt}
+
+model:
+  _target_: etp.embedder.model.EmbedModule
+  cfg:
+    checkpoint_load: ${model_name_or_path}
+    blank_model:
+      _target_: transformers.models.auto.modeling_auto.AutoModel.from_config
+      config: ${model.cfg.config}
+    pretrained_model:
+      _target_: transformers.models.auto.modeling_auto.AutoModel.from_pretrained
+      pretrained_model_name_or_path: ${model_name_or_path}
+      dtype: ${model.cfg.config.dtype}
+    config:
+      _target_: transformers.models.auto.configuration_auto.AutoConfig.from_pretrained
+      pretrained_model_name_or_path: ${model_name_or_path}
+      dtype: bfloat16
+    processor:
+      _target_: transformers.AutoProcessor.from_pretrained
+      pretrained_model_name_or_path: ${model_name_or_path}
+
+trainer:
+  _target_: lightning.pytorch.trainer.trainer.Trainer
+  accelerator: gpu
+  devices: 1
+  num_nodes: 1
+  precision: bf16-mixed
+  use_distributed_sampler: true
+  logger: false
+  enable_checkpointing: false
+
+progress_bar:
+  _target_: lightning.pytorch.callbacks.RichProgressBar
+  refresh_rate: 1
+  console_kwargs:
+    force_terminal: true
+
+embed_writer:
+  _target_: etp.embedder.callbacks.PostProcessStep
+  gather_keys: [id, embeddings]
+  flush_every_n_steps: 50
+  writer:
+    _target_: etp.embedder.writers.WriterHDF5Embedding
+    file_name: ${run_directory}/embeddings.h5

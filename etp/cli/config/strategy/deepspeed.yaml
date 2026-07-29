@@ -1,0 +1,12 @@
+# @package trainer.strategy
+# ZeRO-3 parameter sharding across GPUs and nodes, for models that do not fit
+# on a single GPU or node (e.g. Llama-3.1-405B across 4 nodes x 4 GPUs).
+_target_: lightning.pytorch.strategies.DeepSpeedStrategy
+_convert_: all
+config:
+  bf16:
+    enabled: true
+  train_micro_batch_size_per_gpu: 1
+  zero_allow_untested_optimizer: true
+  zero_optimization:
+    stage: 3
